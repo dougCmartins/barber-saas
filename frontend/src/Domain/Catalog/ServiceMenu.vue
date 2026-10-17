@@ -8,13 +8,17 @@ defineProps<{
   services: Service[]
 }>()
 
+const emit = defineEmits<{
+  choose: [service: Service]
+}>()
+
 const { t } = useI18n()
 
 const categories = ['catalog.categoryCut', 'catalog.categoryBeard', 'catalog.categoryCombos'] as const
 </script>
 
 <template>
-  <section>
+  <section id="servicos">
     <div class="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 border-b border-border pb-4">
       <div class="min-w-0">
         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
@@ -32,7 +36,12 @@ const categories = ['catalog.categoryCut', 'catalog.categoryBeard', 'catalog.cat
       </Button>
     </div>
     <div class="grid gap-x-10 md:grid-cols-2">
-      <ServiceCard v-for="service in services" :key="service.id" :service="service" />
+      <ServiceCard
+        v-for="service in services"
+        :key="service.id"
+        :service="service"
+        @choose="emit('choose', $event)"
+      />
     </div>
   </section>
 </template>

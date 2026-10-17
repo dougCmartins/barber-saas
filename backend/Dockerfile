@@ -1,11 +1,14 @@
 FROM php:8.2-cli
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libzip-dev libsqlite3-dev \
+    && apt-get install -y --no-install-recommends gosu git unzip libzip-dev libsqlite3-dev \
     && docker-php-ext-install pdo_mysql pdo_sqlite zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+RUN groupadd --gid 1000 app \
+    && useradd --uid 1000 --gid app --create-home --shell /usr/sbin/nologin app
 
 WORKDIR /var/www/html
 

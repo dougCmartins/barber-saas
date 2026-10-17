@@ -25,4 +25,15 @@ describe('ServiceCard', () => {
     expect(wrapper.text()).toContain('R$ 65')
     expect(wrapper.text()).toContain('45 min')
   })
+
+  it('emits the service when choose is clicked', async () => {
+    const wrapper = mount(ServiceCard, {
+      props: { service },
+      global: { plugins: [i18n] },
+    })
+
+    await wrapper.get('button').trigger('click')
+
+    expect(wrapper.emitted('choose')?.[0]).toEqual([service])
+  })
 })

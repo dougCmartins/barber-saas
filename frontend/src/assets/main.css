@@ -19,9 +19,15 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
 }
 
 :root {
@@ -38,9 +44,15 @@
   --muted-foreground: oklch(0.69 0.015 80);
   --accent: oklch(0.27 0.035 72);
   --accent-foreground: oklch(0.96 0.012 83);
+  --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.3 0.014 70);
   --input: oklch(0.3 0.014 70);
   --ring: oklch(0.73 0.13 78);
+  --sidebar: oklch(0.105 0.01 70);
+  --sidebar-foreground: oklch(0.9 0.012 83);
+  --sidebar-border: oklch(0.26 0.012 70);
+  --success: oklch(0.72 0.16 155);
+  --warning: oklch(0.79 0.14 80);
 }
 
 @layer base {

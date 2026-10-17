@@ -3,6 +3,26 @@ set -eu
 
 cd /var/www/html
 
+if [ "$(id -u)" = "0" ]; then
+  if [ "${HOST_UID:-0}" != "0" ]; then
+    sh docker/fix-permissions.sh
+    exec gosu "${HOST_UID}:${HOST_GID:-$HOST_UID}" "$0" "$@"
+  fi
+
+  chown -R app:app storage bootstrap/cache
+  if [ -d vendor ]; then
+    chown -R app:app vendor
+  fi
+  find storage bootstrap/cache -type d -exec chmod 750 {} +
+  find storage bootstrap/cache -type f ! -name 'oauth-*.key' -exec chmod 640 {} +
+  for key in storage/oauth-private.key storage/oauth-public.key; do
+    if [ -f "$key" ]; then
+      chmod 600 "$key"
+    fi
+  done
+  exec gosu app:app "$0" "$@"
+fi
+
 export DB_CONNECTION="${DB_CONNECTION:-mysql}"
 export DB_HOST="${DB_HOST:-mysql}"
 export DB_PORT="${DB_PORT:-3306}"

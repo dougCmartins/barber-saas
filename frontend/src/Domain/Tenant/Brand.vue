@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 withDefaults(
   defineProps<{
+    name: string
     compact?: boolean
   }>(),
   {
@@ -23,7 +24,7 @@ const { t } = useI18n()
     </span>
     <div class="min-w-0 leading-none">
       <p class="truncate font-display text-lg font-semibold uppercase text-foreground">
-        {{ t('tenant.brandName') }}
+        {{ name }}
       </p>
       <p
         v-if="!compact"

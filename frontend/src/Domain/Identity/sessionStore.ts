@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Token } from '@/Domain/Identity/tokenModel'
+import { http } from '@/http/client'
 
 const storageKey = 'barber.session'
 
@@ -17,7 +18,17 @@ export const useSessionStore = defineStore('session', () => {
     localStorage.removeItem(storageKey)
   }
 
-  return { token, setToken, clear }
+  async function login(email: string, password: string): Promise<void> {
+    const response = await http<Token>('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+
+    setToken(response.data)
+  }
+
+  return { token, setToken, clear, login }
 })
 
 function readToken(): Token | null {

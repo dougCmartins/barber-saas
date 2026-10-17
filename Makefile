@@ -1,8 +1,13 @@
 COMPOSE := $(shell docker compose version >/dev/null 2>&1 && echo docker compose || echo docker-compose)
+HOST_UID := $(shell id -u)
+HOST_GID := $(shell id -g)
 
-.PHONY: up down logs migrate seed test shell-api test-web shell-web
+export HOST_UID
+export HOST_GID
 
-up:
+.PHONY: up down logs migrate seed test shell-api test-web shell-web permissions
+
+up: permissions
 	$(COMPOSE) up --build
 
 down:
@@ -28,3 +33,6 @@ test-web:
 
 shell-web:
 	$(COMPOSE) exec frontend sh
+
+permissions:
+	$(COMPOSE) run --rm --no-deps --user root --entrypoint sh backend -c 'sh docker/fix-permissions.sh'

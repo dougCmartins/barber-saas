@@ -13,6 +13,15 @@ export async function http<T>(path: string, init: RequestInit = {}): Promise<{ d
     ...init,
     headers,
   })
+
+  if (response.status === 204) {
+    if (!response.ok) {
+      throw { code: 'HTTP_ERROR', status_code: response.status }
+    }
+
+    return { data: undefined as T }
+  }
+
   const body: unknown = await response.json()
 
   if (!response.ok) {

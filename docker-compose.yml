@@ -28,6 +28,8 @@ services:
       DB_DATABASE: barber_saas
       DB_USERNAME: barber
       DB_PASSWORD: secret
+      HOST_UID: ${HOST_UID:-0}
+      HOST_GID: ${HOST_GID:-0}
     volumes:
       - ./backend:/var/www/html
     depends_on:

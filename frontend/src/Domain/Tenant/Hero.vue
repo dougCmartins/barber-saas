@@ -1,16 +1,32 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Star } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
-import heroImage from '@/assets/barbershop-hero.jpg'
 import { buttonClasses } from '@/ui/buttonClasses'
 
+const props = defineProps<{
+  imageSrc: string
+  rating: number
+  totalReviews: number
+}>()
+
 const { t } = useI18n()
+
+const ratingLabel = computed(() =>
+  t('tenant.rating', {
+    rating: new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(props.rating),
+    count: props.totalReviews,
+  }),
+)
 </script>
 
 <template>
   <section class="relative mx-auto min-h-[440px] max-w-7xl overflow-hidden md:min-h-[540px] md:rounded-md">
     <img
-      :src="heroImage"
+      :src="imageSrc"
       :alt="t('tenant.heroAlt')"
       width="1536"
       height="864"
@@ -33,12 +49,12 @@ const { t } = useI18n()
         {{ t('tenant.heroBody') }}
       </p>
       <div class="mt-7 flex flex-wrap items-center gap-3">
-        <a href="#" :class="buttonClasses('default', 'lg')" @click.prevent>
+        <a href="#servicos" :class="buttonClasses('default', 'lg')">
           {{ t('tenant.book') }}
         </a>
         <span class="flex items-center gap-1.5 text-xs text-foreground">
           <Star class="size-4 fill-primary text-primary" />
-          {{ t('tenant.rating') }}
+          {{ ratingLabel }}
         </span>
       </div>
     </div>

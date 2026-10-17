@@ -9,6 +9,10 @@ const props = defineProps<{
   service: Service
 }>()
 
+const emit = defineEmits<{
+  choose: [service: Service]
+}>()
+
 const { t } = useI18n()
 
 const duration = computed(() => {
@@ -45,9 +49,9 @@ const duration = computed(() => {
       <p class="mb-3 text-sm font-semibold text-foreground">
         {{ t('catalog.price', { price: service.price }) }}
       </p>
-      <a href="#" :class="buttonClasses('default', 'sm')" @click.prevent>
+      <button type="button" :class="buttonClasses('default', 'sm')" @click="emit('choose', service)">
         {{ t('catalog.choose') }}
-      </a>
+      </button>
     </div>
   </article>
 </template>

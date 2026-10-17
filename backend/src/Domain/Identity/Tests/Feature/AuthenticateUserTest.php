@@ -61,6 +61,19 @@ final class AuthenticateUserTest extends TestCase
         ));
     }
 
+    public function test_invalid_login_fields_expose_the_rule_name(): void
+    {
+        $response = $this->postJson('/api/login', [
+            'email' => 'not-an-email',
+            'password' => '',
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertJsonPath('code', 'VALIDATION_FAILED');
+        $response->assertJsonPath('errors.email.0', 'email');
+        $response->assertJsonPath('errors.password.0', 'required');
+    }
+
     public function test_handle_rejects_an_unknown_email(): void
     {
         $this->expectException(InvalidCredentialsException::class);
