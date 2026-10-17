@@ -14,12 +14,20 @@ final class Barbershop extends Model
         'name',
         'slug',
         'active',
+        'address',
+        'city',
+        'closing_time',
+        'rating',
+        'total_reviews',
+        'banner_url',
     ];
 
     protected function casts(): array
     {
         return [
             'active' => 'boolean',
+            'rating' => 'float',
+            'total_reviews' => 'integer',
         ];
     }
 

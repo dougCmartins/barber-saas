@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,27 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (ValidationException $exception, Request $request) {
+            if (! $request->is('api/*') && ! $request->expectsJson()) {
+                return null;
+            }
+
+            $errors = [];
+
+            foreach ($exception->validator->failed() as $field => $rules) {
+                $rule = array_key_first($rules);
+                $errors[$field] = [is_string($rule) ? strtolower($rule) : 'invalid'];
+            }
+
+            return response()->json([
+                'data' => null,
+                'message' => $exception->getMessage(),
+                'code' => 'VALIDATION_FAILED',
+                'status_code' => $exception->status,
+                'errors' => $errors,
+            ], $exception->status);
+        });
+
         $exceptions->render(function (DomainException $exception, Request $request) {
             if (! method_exists($exception, 'getErrorCode') || ! method_exists($exception, 'getHttpStatus')) {
                 return null;

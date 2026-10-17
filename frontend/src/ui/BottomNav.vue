@@ -1,14 +1,20 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { CalendarDays, Home, LayoutDashboard } from '@lucide/vue'
 import { buttonClasses } from '@/ui/buttonClasses'
 
-defineProps<{
+const props = defineProps<{
   active: 'home' | 'schedule'
+  slug: string
 }>()
 
 const { t } = useI18n()
+
+const homeTo = computed(() =>
+  props.slug ? { name: 'public-home', params: { slug: props.slug } } : '/',
+)
 
 function itemClass(isActive: boolean): string {
   return buttonClasses(
@@ -25,18 +31,18 @@ function itemClass(isActive: boolean): string {
     :aria-label="t('nav.label')"
   >
     <div class="mx-auto grid max-w-md grid-cols-3">
-      <RouterLink to="/" :class="itemClass(active === 'home')">
+      <RouterLink :to="homeTo" :class="itemClass(active === 'home')">
         <Home class="size-4" />
         <span>{{ t('nav.home') }}</span>
       </RouterLink>
-      <a href="#" :class="itemClass(active === 'schedule')" @click.prevent>
+      <a href="#servicos" :class="itemClass(active === 'schedule')">
         <CalendarDays class="size-4" />
         <span>{{ t('nav.schedule') }}</span>
       </a>
-      <a href="#" :class="itemClass(false)" @click.prevent>
+      <RouterLink :to="{ name: 'dashboard' }" :class="itemClass(false)">
         <LayoutDashboard class="size-4" />
         <span>{{ t('nav.management') }}</span>
-      </a>
+      </RouterLink>
     </div>
   </nav>
 </template>

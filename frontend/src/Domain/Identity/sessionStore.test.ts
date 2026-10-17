@@ -62,4 +62,27 @@ describe('sessionStore', () => {
     )
     expect(authorization).toBe('Bearer abc')
   })
+
+  it('logs in and stores the token from response data', async () => {
+    const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>(async () => {
+      return new Response(JSON.stringify(token), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const store = useSessionStore()
+    await store.login('owner@example.com', 'password1')
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://localhost:8086/api/login',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ email: 'owner@example.com', password: 'password1' }),
+      }),
+    )
+    expect(store.token).toEqual(token)
+    expect(localStorage.getItem('barber.session')).toBe(JSON.stringify(token))
+  })
 })

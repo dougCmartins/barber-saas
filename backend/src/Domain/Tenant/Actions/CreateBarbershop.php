@@ -24,6 +24,12 @@ final class CreateBarbershop
             name: $barbershop->name,
             slug: $barbershop->slug,
             active: $barbershop->active,
+            address: $barbershop->address,
+            city: $barbershop->city,
+            closing_time: $barbershop->closing_time,
+            rating: (float) $barbershop->rating,
+            total_reviews: (int) $barbershop->total_reviews,
+            banner_url: $barbershop->banner_url,
         );
     }
 }

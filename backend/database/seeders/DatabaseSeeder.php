@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'role' => UserRole::SuperAdmin,
         ]);
+
+        $this->call(NavalhaSeeder::class);
     }
 }
